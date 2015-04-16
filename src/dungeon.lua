@@ -26,6 +26,27 @@ function dungeon.new(options)
 	return self
 end
 
+function dungeon_mt:removeDead(x,y)
+	if self:getTile(x,y).id == tile.id.floor then
+		local n_list = {
+			{x= 1,y = 0},
+			{x= -1,y = 0},
+			{x= 0,y = 1},
+			{x= 0,y = -1}
+		}
+		local walls = 0
+		for i,v in ipairs(n_list) do
+			if self:getTile(x+v.x,y+v.y).id == tile.id.wall then
+				walls = walls +1
+			end
+		end
+		if walls >= 3 then
+			self:setTile(x,y,tile.new(tile.id.wall,-1))
+		end
+	end
+	return true
+end
+
 function dungeon_mt:findCandidates(  )
 	local candidate = {}
 	local n_list = {
@@ -78,6 +99,14 @@ function dungeon_mt:generate( )
 	for i=1,self.xsize do
 		for j=1,self.ysize do
 			self:generateMaze(i*2,j*2)
+		end
+	end
+	self:makeConnections()
+	for i=1,50 do			
+		for i=1,self.width do
+			for j=1,self.height do
+				self:removeDead(i,j)
+			end
 		end
 	end
 

@@ -44,7 +44,5 @@ function love.keypressed( key )
 			d:setTile(v.x,v.y,tile.new(tile.id.candidat,-10))
 		end
 	end
-	if key == "f" then
-		d:makeConnections()
-	end
+	
 end
